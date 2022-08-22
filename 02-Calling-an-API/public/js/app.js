@@ -86,7 +86,7 @@ const callApi = async () => {
         Authorization: `Bearer ${token}`
       }
     });
-
+  
     const responseData = await response.json();
     const responseElement = document.getElementById("api-call-result");
 
@@ -100,6 +100,55 @@ const callApi = async () => {
     console.error(e);
   }
 };
+
+async function callApi1() {
+  try {
+    const token = await auth0.getTokenSilently();
+
+    const response = await fetch("/api/external", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const responseData = await response.json();
+    const responseElement = document.getElementById("api-call-result");
+
+    responseElement.innerText = JSON.stringify(responseData, {}, 2);
+
+    document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
+    console.log(response);
+
+    eachElement(".result-block", (c) => c.classList.add("show"));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function callApi2() {
+  try {
+    const token = await auth0.getTokenSilently();
+
+    const response = await fetch("/api/external", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const responseData = await response.json();
+    const responseElement = document.getElementById("api-call-result");
+
+    responseElement.innerText = JSON.stringify(responseData, {}, 2);
+
+    document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
+    console.log(response);
+
+    eachElement(".result-block", (c) => c.classList.add("show"));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 
 // Will run when page finishes loading
 window.onload = async () => {
@@ -181,7 +230,63 @@ document.getElementById('call-api').addEventListener('click', () => {
   auth0
     .getTokenSilently()
     .then(accessToken =>
-      fetch('https://myapi.comhttps://dev-kad4txwg.us.auth0.com/api/v2/clients?fields=tenant%2Cname&include_fields=true&include_totals=true', {
+      fetch('/Users/tiana/JS-Tech/auth0-javascript-tech-exercise/02-Calling-an-API/welcome.html', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+    )
+    .then(result => result.json())
+    .then(data => {
+      console.log(data);
+    });
+});
+
+const callApi1 = document.getElementsByTagName("call-api-1");
+
+document.getElementById('call-api-1').addEventListener('click', () => {
+  console.log("API Call Fired")
+  auth0
+    // .getTokenSilently()
+    // .then(accessToken =>
+      fetch('https://dev-kad4txwg.us.auth0.com/api/v2/clients?fields=tenant%2Cname&include_fields=true&include_totals=true', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+    )
+    .then(result => result.json())
+    .then(data => {
+      console.log(data);
+    });
+// });
+
+document.getElementById('call-api-2').addEventListener('click', () => {
+  console.log("API Call Fired")
+  auth0
+    .getTokenSilently()
+    .then(accessToken =>
+      fetch('https://dev-kad4txwg.us.auth0.com/api/v2/actions/actions?triggerId=post-login&deployed=true', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+    )
+    .then(result => result.json())
+    .then(data => {
+      console.log(data);
+    });
+});
+
+document.getElementById('call-api-3').addEventListener('click', () => {
+  console.log("API Call Fired")
+  auth0
+    .getTokenSilently()
+    .then(accessToken =>
+      fetch('https://dev-kad4txwg.us.auth0.com/api/v2/actions/actions?triggerId=post-login&deployed=true', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${accessToken}`
