@@ -1,18 +1,12 @@
 // The Auth0 client, initialized in configureClient()
 auth0 = null;
 
-//with async/await
-// const auth0 = await createAuth0Client({
-//   domain: '<AUTH0_DOMAIN>',
-//   client_id: '<AUTH0_CLIENT_ID>',
-//   redirect_uri: '<MY_CALLBACK_URL>'
-// });
 
 //with promises
 createAuth0Client({
-  domain: '<AUTH0_DOMAIN>',
-  client_id: '<AUTH0_CLIENT_ID>',
-  redirect_uri: '<MY_CALLBACK_URL>'
+  domain: 'dev-kad4txwg.us.auth0.com',
+  client_id: '60KnJDo8yzW5pDOsM0VmYVDoJwIYjEnO',
+  redirect_uri: 'http://localhost:3000'
 }).then(auth0 => {
   //...
 });
@@ -94,9 +88,6 @@ const fetchAuthConfig = () => fetch("/auth_config.json");
 /**
  * Initializes the Auth0 client
  */
-
-
-
 const configureClient = async () => {
   const response = await fetchAuthConfig();
   const config = await response.json();
