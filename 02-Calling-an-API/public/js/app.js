@@ -4,7 +4,7 @@ let auth0 = null;
 /**
  * Starts the authentication flow
  */
-const login = async (targetUrl) => {
+async function login(targetUrl) {
   try {
     console.log("Logging in", targetUrl);
 
@@ -20,7 +20,7 @@ const login = async (targetUrl) => {
   } catch (err) {
     console.log("Log in failed", err);
   }
-};
+}
 
 /**
  * Executes the logout flow
@@ -74,34 +74,17 @@ const requireAuth = async (fn, targetUrl) => {
   return login(targetUrl);
 };
 
+/** Check if user is manager */
+export async function onExecutePostLogin(event, api, authorization) {
+  if(authorization.roles === 'Manager')
+  console.log('This user is a manager');
+  else console.log('This user is not a Manager')
+}
+
 /**
  * Calls the API endpoint with an authorization token
  */
-const callApi = async () => {
-  try {
-    const token = await auth0.getTokenSilently();
-
-    const response = await fetch("/api/external", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  
-    const responseData = await response.json();
-    const responseElement = document.getElementById("api-call-result");
-
-    responseElement.innerText = JSON.stringify(responseData, {}, 2);
-
-    document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
-    console.log(response);
-
-    eachElement(".result-block", (c) => c.classList.add("show"));
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-async function callApi1() {
+async function callApi() {
   try {
     const token = await auth0.getTokenSilently();
 
@@ -124,30 +107,53 @@ async function callApi1() {
     console.error(e);
   }
 }
+//   async function callApi1() {
+//   try {
+//     const token = await auth0.getTokenSilently();
 
-async function callApi2() {
-  try {
-    const token = await auth0.getTokenSilently();
+//     const response = await fetch("/api/external", {
+//       headers: {
+//         Authorization: `Bearer ${token}`
+//       }
+//     });
 
-    const response = await fetch("/api/external", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+//     const responseData = await response.json();
+//     const responseElement = document.getElementById("api-call-result");
 
-    const responseData = await response.json();
-    const responseElement = document.getElementById("api-call-result");
+//     responseElement.innerText = JSON.stringify(responseData, {}, 2);
 
-    responseElement.innerText = JSON.stringify(responseData, {}, 2);
+//     document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
+//     console.log(response);
 
-    document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
-    console.log(response);
+//     eachElement(".result-block", (c) => c.classList.add("show"));
+//   } catch (e) {
+//     console.error(e);
+//   }
+// }
 
-    eachElement(".result-block", (c) => c.classList.add("show"));
-  } catch (e) {
-    console.error(e);
-  }
-}
+//  async function callApi2() {
+//   try {
+//     const token = await auth0.getTokenSilently();
+
+//     const response = await fetch("/api/external", {
+//       headers: {
+//         Authorization: `Bearer ${token}`
+//       }
+//     });
+
+//     const responseData = await response.json();
+//     const responseElement = document.getElementById("api-call-result");
+
+//     responseElement.innerText = JSON.stringify(responseData, {}, 2);
+
+//     document.querySelectorAll("pre code").forEach(hljs.highlightBlock);
+//     console.log(response);
+
+//     eachElement(".result-block", (c) => c.classList.add("show"));
+//   } catch (e) {
+//     console.error(e);
+//   }
+// }
 
 
 // Will run when page finishes loading
@@ -224,6 +230,24 @@ window.onload = async () => {
 //   console.log(data);
 // });
 
+document.getElementById('pingAPI').addEventListener('click', () => {
+  console.log("Ping API Call Fired")
+  auth0
+    .getTokenSilently()
+    .then(accessToken =>
+      fetch('/Users/tiana/JS-Tech/auth0-javascript-tech-exercise/02-Calling-an-API/welcome.html', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+    )
+    .then(result => result.json())
+    .then(data => {
+      console.log(data);
+    });
+});
+
 //with promises
 document.getElementById('call-api').addEventListener('click', () => {
   console.log("API Call Fired")
@@ -243,13 +267,12 @@ document.getElementById('call-api').addEventListener('click', () => {
     });
 });
 
-const callApi1 = document.getElementsByTagName("call-api-1");
 
 document.getElementById('call-api-1').addEventListener('click', () => {
   console.log("API Call Fired")
   auth0
-    // .getTokenSilently()
-    // .then(accessToken =>
+     .getTokenSilently()
+    .then(accessToken =>
       fetch('https://dev-kad4txwg.us.auth0.com/api/v2/clients?fields=tenant%2Cname&include_fields=true&include_totals=true', {
         method: 'GET',
         headers: {
@@ -261,7 +284,7 @@ document.getElementById('call-api-1').addEventListener('click', () => {
     .then(data => {
       console.log(data);
     });
-// });
+});
 
 document.getElementById('call-api-2').addEventListener('click', () => {
   console.log("API Call Fired")
